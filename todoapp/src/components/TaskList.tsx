@@ -1,29 +1,37 @@
-// Define Task type
-type Task = {
-  name: string;
-  details: string;
-  completed: boolean;
-};
-
-// Define TaskListProps for explicit typing
-type TaskListProps = {
-  tasks: Task[];
-};
-
+import styled from "styled-components";
+import { useContext } from "react";
+import { TaskContext } from "../Context/TaskContext";
 import TaskItem from "./TaskItem";
 
-const TaskList = ({ tasks }: TaskListProps) => (
-  <div>
-    {tasks.map((task) => (
-      <div>
+const TaskListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+`;
+
+const TaskList = () => {
+  const taskContext = useContext(TaskContext);
+
+  // Add a check in case `taskContext` is undefined
+  if (!taskContext) {
+    throw new Error("TaskList must be used within a TaskProvider");
+  }
+
+  const { tasks, deleteTask, editTask } = taskContext;
+
+  return (
+    <TaskListContainer>
+      {tasks.map((task, index) => (
         <TaskItem
-          name={task.name}
-          details={task.details}
-          completed={task.completed}
+          key={index}
+          task={task}
+          onDeleteTask={() => deleteTask(index)}
+          onEdit={() => editTask(index, task)}
         />
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </TaskListContainer>
+  );
+};
 
 export default TaskList;
