@@ -18,7 +18,7 @@ const TaskList = () => {
     throw new Error("TaskList must be used within a TaskProvider");
   }
 
-  const { tasks, deleteTask, editTask } = taskContext;
+  const { tasks, deleteTask, getCurrentTaskIndex } = taskContext;
 
   return (
     <TaskListContainer>
@@ -27,7 +27,7 @@ const TaskList = () => {
           key={index}
           task={task}
           onDeleteTask={() => deleteTask(index)}
-          onEdit={() => editTask(index, task)}
+          getIndex={() => getCurrentTaskIndex(index)}
         />
       ))}
     </TaskListContainer>

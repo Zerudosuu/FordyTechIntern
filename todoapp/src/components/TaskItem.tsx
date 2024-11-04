@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
+import { TaskContext } from "../Context/TaskContext";
+import { Pencil, X } from "lucide-react";
 
 type Task = {
   name: string;
@@ -10,7 +12,8 @@ type Task = {
 type TaskItemProps = {
   task: Task;
   onDeleteTask?: () => void;
-  onEdit?: () => void;
+  completeEdit?: () => void;
+  getIndex: () => void;
 };
 
 const Item = styled.div`
@@ -21,8 +24,14 @@ const Item = styled.div`
   width: 100%;
   padding: 20px;
   gap: 20px;
-  color: white;
+  color: #373838;
   border-radius: 10px;
+  border: 1px solid #979797;
+  margin-bottom: 10px;
+
+  box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
 
   &:hover {
     background-color: #525353;
@@ -32,35 +41,38 @@ const Item = styled.div`
     margin-left: 0;
   }
 
+  h1 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
   .TaskNameAndDetailContainer {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 10px;
-    flex-wrap: wrap;
-    max-width: 200px;
-    margin-bottom: 10px;
+    width: 100%;
 
     .details {
-      margin-top: 5px;
       font-size: 12px;
       opacity: 80%;
     }
 
     input {
-      height: 18px;
-      width: 18px;
+      height: 20px;
+      width: 20px;
     }
   }
 
   .buttonContainer {
     display: flex;
+    align-items: center;
     gap: 20px;
 
     button {
       background: none;
       fill: none;
       border: none;
-      color: white;
+      color: black;
       border-radius: 50%;
       padding: 8px 10px;
 
@@ -75,10 +87,25 @@ const TaskName = styled.h3<{ completed: boolean }>`
   text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
   margin: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    width: 100%;
+  }
 `;
 
-const TaskItem = ({ task, onDeleteTask, onEdit }: TaskItemProps) => {
+const TaskItem = ({ task, onDeleteTask, getIndex }: TaskItemProps) => {
   const [isCompleted, setIsCompleted] = useState(task.completed);
+
+  const { setIsEditing, hideEditTask } = useContext(TaskContext);
+
+  const edit = () => {
+    hideEditTask(true);
+    getIndex();
+  };
+
   return (
     <Item>
       <div className="TaskNameAndDetailContainer">
@@ -89,45 +116,19 @@ const TaskItem = ({ task, onDeleteTask, onEdit }: TaskItemProps) => {
         />
 
         <div>
-          <TaskName completed={isCompleted}>{task.name}</TaskName>
-          <p className="details">{task.details}</p>
+          <TaskName completed={isCompleted}>
+            <h1>{task.name}</h1>
+            <p className="details">{task.details}</p>
+          </TaskName>
         </div>
       </div>
 
       <div className="buttonContainer">
-        <button type="button" onClick={onEdit}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="lucide lucide-pencil"
-          >
-            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-            <path d="m15 5 4 4" />
-          </svg>
+        <button type="button" onClick={edit}>
+          <Pencil color="#007eea" strokeWidth={3} size={24} />
         </button>
         <button type="button" onClick={onDeleteTask}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="lucide lucide-x"
-          >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
+          <X color="red" strokeWidth={3} size={24} />
         </button>
       </div>
     </Item>

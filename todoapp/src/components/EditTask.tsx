@@ -1,16 +1,11 @@
-import { useState, useContext } from "react";
-import { TaskContext } from "../Context/TaskContext";
+import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import { TaskContext } from "../Context/TaskContext";
 
 type Task = {
   name: string;
   details: string;
   completed: boolean;
-};
-
-type AddTaskComponentProps = {
-  componentType: "adding" | "editing";
-  editIndex?: number; // optional index for edit mode
 };
 
 const AddTaskContainer = styled.div`
@@ -73,37 +68,39 @@ const AddTaskContainer = styled.div`
   }
 `;
 
-const AddTaskComponent = () => {
-  const [task, setTask] = useState<Task>({
+const EditTask = ({ task }) => {
+  const [currentTask, setCurrentTask] = useState<Task>({
     name: "",
     details: "",
     completed: false,
   });
-  const taskContext = useContext(TaskContext);
 
-  if (!taskContext) {
-    throw new Error("AddTaskComponent must be used within a TaskProvider");
-  }
-
-  const { addTask, hideAddTask } = taskContext;
-
-  const handleTask = () => {
-    addTask(task);
-    setTask({ name: "", details: "", completed: false });
-    hideAddTask();
+  const handleSaveTask = () => {
+    completeEdit(currentTask);
+    hideEditTask();
   };
+
+  const textContext = useContext(TaskContext);
+
+  const { hideEditTask, completeEdit } = textContext;
+
+  useEffect(() => {
+    setCurrentTask(task);
+  }, []);
 
   return (
     <AddTaskContainer>
-      <h1>Add Task</h1>
+      <h1>What do you want to Edit</h1>
       <div className="taskNameContainer">
         <label htmlFor="taskName"> Enter Task Name</label>
         <input
           name="taskName"
           type="text"
           placeholder="Task Name"
-          value={task.name}
-          onChange={(e) => setTask({ ...task, name: e.target.value })}
+          value={currentTask.name}
+          onChange={(e) =>
+            setCurrentTask({ ...currentTask, name: e.target.value })
+          }
         />
       </div>
 
@@ -113,19 +110,21 @@ const AddTaskComponent = () => {
           name="taskDetails"
           type="text"
           placeholder="Task Details"
-          value={task.details}
-          onChange={(e) => setTask({ ...task, details: e.target.value })}
+          value={currentTask.details}
+          onChange={(e) =>
+            setCurrentTask({ ...currentTask, details: e.target.value })
+          }
         />
       </div>
 
       <div className="buttonContainer">
-        <button onClick={hideAddTask}>Cancel</button>
-        <button className="Addtask" onClick={handleTask}>
-          Add to Task
+        <button onClick={hideEditTask}>Cancel</button>
+        <button className="Addtask" onClick={handleSaveTask}>
+          Save Changes
         </button>
       </div>
     </AddTaskContainer>
   );
 };
 
-export default AddTaskComponent;
+export default EditTask;
