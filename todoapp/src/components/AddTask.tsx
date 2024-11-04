@@ -101,6 +101,7 @@ const AddTaskComponent = () => {
 
   return (
     <AddTaskContainer>
+      <h1>Add Task</h1>
       <div className="taskNameContainer">
         <label htmlFor="taskName"> Enter Task Name</label>
         <input
