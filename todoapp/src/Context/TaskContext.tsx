@@ -1,6 +1,21 @@
 import { createContext } from "react";
 
-type Task = { name: string; details: string; completed: boolean };
+export type Status =
+  | "Open"
+  | "InProgress"
+  | "Complete"
+  | "DueSoon"
+  | "Overdue"
+  | "Priority";
+export type Priority = "High" | "Medium" | "Low";
+export type Task = {
+  name: string;
+  details: string;
+  completed: boolean;
+  dueDate?: Date;
+  status?: Status;
+  priority?: Priority;
+};
 
 type TaskContextType = {
   tasks: Task[];
@@ -9,7 +24,7 @@ type TaskContextType = {
   completeEdit: (task: Task) => void;
   hideAddTask: () => void;
   hideEditTask: () => void;
-  setIsEditing: (editing: boolean) => void;
+  currentPriority: Priority;
   getCurrentTaskIndex: (index: number) => void;
 };
 

@@ -18,11 +18,16 @@ const TaskList = () => {
     throw new Error("TaskList must be used within a TaskProvider");
   }
 
-  const { tasks, deleteTask, getCurrentTaskIndex } = taskContext;
+  const { tasks, deleteTask, getCurrentTaskIndex, currentPriority } =
+    taskContext;
 
+  const filteredTasks =
+    currentPriority === "All"
+      ? tasks
+      : tasks.filter((task) => task.priority === currentPriority);
   return (
     <TaskListContainer>
-      {tasks.map((task, index) => (
+      {filteredTasks.map((task, index) => (
         <TaskItem
           key={index}
           task={task}

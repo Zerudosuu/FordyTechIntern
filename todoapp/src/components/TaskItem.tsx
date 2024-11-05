@@ -1,12 +1,15 @@
 import { useState, useContext } from "react";
 import styled from "styled-components";
-import { TaskContext } from "../Context/TaskContext";
+import { TaskContext, Status, Priority } from "../Context/TaskContext";
 import { Pencil, X } from "lucide-react";
 
 type Task = {
   name: string;
   details: string;
   completed: boolean;
+  status: Status;
+  dueDate: Date;
+  priority: Priority;
 };
 
 type TaskItemProps = {
@@ -16,25 +19,31 @@ type TaskItemProps = {
   getIndex: () => void;
 };
 
-const Item = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: auto;
-  width: 100%;
-  padding: 20px;
-  gap: 20px;
-  color: #373838;
-  border-radius: 10px;
-  border: 1px solid #979797;
-  margin-bottom: 10px;
+const sizes = {
+  desktop: "1024px",
+  tablet: "768px",
+  mobile: "480px",
+};
 
-  box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 2px 10px 30px 0px rgba(0, 0, 0, 0.2);
+const media = {
+  desktop: `(max-width: ${sizes.desktop})`,
+  tablet: `(max-width: ${sizes.tablet})`,
+  mobile: `(max-width: ${sizes.mobile})`,
+};
+
+const Item = styled.div<{ completed: boolean }>`
+  display: flex;
+  width: 100%;
+  height: 80px;
+  border: 1px solid black;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
 
   &:hover {
     background-color: #525353;
+    color: white;
   }
 
   button {
@@ -48,51 +57,43 @@ const Item = styled.div`
 
   .TaskNameAndDetailContainer {
     display: flex;
-    align-items: start;
-    gap: 10px;
-    width: 100%;
+    width: 70%;
 
-    .details {
-      font-size: 12px;
-      opacity: 80%;
-    }
+    align-items: flex-start;
+    gap: 10px;
 
     input {
       height: 20px;
       width: 20px;
+      margin-top: 2px;
+    }
+
+    .TaskDetailsAndName {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 5px h1 {
+        text-decoration: ${({ completed }) =>
+          completed ? "line-through" : "none"};
+      }
+      p {
+        opacity: 70%;
+        font-size: 14px;
+      }
     }
   }
 
   .buttonContainer {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    gap: 40px;
+    width: 30%;
+    justify-content: flex-end;
 
     button {
       background: none;
-      fill: none;
+      outline: none;
       border: none;
-      color: black;
-      border-radius: 50%;
-      padding: 8px 10px;
-
-      &:hover {
-        background-color: #303131;
-      }
     }
-  }
-`;
-
-const TaskName = styled.h3<{ completed: boolean }>`
-  text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
-  margin: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  h1 {
-    width: 100%;
   }
 `;
 
@@ -107,7 +108,7 @@ const TaskItem = ({ task, onDeleteTask, getIndex }: TaskItemProps) => {
   };
 
   return (
-    <Item>
+    <Item completed={isCompleted}>
       <div className="TaskNameAndDetailContainer">
         <input
           type="checkbox"
@@ -115,11 +116,14 @@ const TaskItem = ({ task, onDeleteTask, getIndex }: TaskItemProps) => {
           onChange={() => setIsCompleted((prev) => !prev)}
         />
 
-        <div>
-          <TaskName completed={isCompleted}>
-            <h1>{task.name}</h1>
-            <p className="details">{task.details}</p>
-          </TaskName>
+        <div className="TaskDetailsAndName">
+          <h1>{task.name}</h1>
+          <p className="details">{task.details}</p>
+        </div>
+
+        <div className="statusAndPriority">
+          <p>{task.status}</p>
+          <p>{task.priority}</p>
         </div>
       </div>
 
@@ -128,7 +132,7 @@ const TaskItem = ({ task, onDeleteTask, getIndex }: TaskItemProps) => {
           <Pencil color="#007eea" strokeWidth={3} size={24} />
         </button>
         <button type="button" onClick={onDeleteTask}>
-          <X color="red" strokeWidth={3} size={24} />
+          <X className="DeleteButton" color="red" strokeWidth={3} size={24} />
         </button>
       </div>
     </Item>
