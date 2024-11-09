@@ -27,88 +27,106 @@ const media = {
 const AddTaskContainer = styled.div`
   position: absolute;
   width: 30%;
-  border: 1px solid white;
-  height: 50%;
-  top: 30%;
-  left: 40%;
+  height: 60%;
+  top: 20%;
+  left: 35%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  padding: 30px;
+  justify-content: space-around;
+  padding: 25px;
   background-color: white;
-  border-radius: 20px;
-  border: 1px solid #979797;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 
   label {
     font-size: 12px;
+    color: #555;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 20px;
+    color: #333;
   }
 
   @media ${media.tablet} {
-    flex-direction: column;
     width: 90%;
-    height: 100%;
+    height: auto;
     top: 0;
-    left: 10%;
-    z-index: 200;
+    left: 5%;
+    padding: 20px;
   }
 
   @media ${media.mobile} {
-    flex-direction: column;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    z-index: 200;
-    border-radius: 5px;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  .taskInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input,
+    select {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      outline: none;
+      transition: border 0.2s;
+
+      &:focus {
+        border-color: #007eea;
+      }
+    }
+
+    select {
+      cursor: pointer;
+    }
   }
 
   .buttonContainer {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 10px;
 
     button {
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 10px 20px;
-      background: none;
-      transition: all 0.3s;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
 
       &:hover {
-        background-color: #b2b3b4;
-        color: white;
+        background-color: #ddd;
       }
     }
 
     .Addtask {
-      background-color: #445055;
+      background-color: #007eea;
       color: white;
-      border: none;
 
       &:hover {
-        background-color: #2e363a;
+        background-color: #005bb5;
       }
-    }
-  }
-  .taskNameContainer,
-  .taskDetailContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    input {
-      padding: 10px 10px;
-      border-radius: 10px;
-      margin: 0;
     }
   }
 `;
 
 const AddTaskComponent = () => {
   const [task, setTask] = useState<Task>({
-    name: "",
+    name: "No name Task",
     details: "",
     completed: false,
-    status: "Open", // Adjusted default status to match Status type
+    status: "To Do", // Adjusted default status to match Status type
     dueDate: new Date(),
     priority: "Low",
   });
@@ -123,10 +141,10 @@ const AddTaskComponent = () => {
   const handleTask = () => {
     addTask(task);
     setTask({
-      name: "",
+      name: "No name Task",
       details: "",
       completed: false,
-      status: "Open",
+      status: "To Do",
       dueDate: new Date(),
       priority: "Low",
     });
@@ -135,8 +153,9 @@ const AddTaskComponent = () => {
   return (
     <AddTaskContainer>
       <h1>Add Task</h1>
-      <div className="taskNameContainer">
-        <label htmlFor="taskName"> Enter Task Name</label>
+
+      <div className="taskInputContainer">
+        <label htmlFor="taskName">Enter Task Name</label>
         <input
           name="taskName"
           type="text"
@@ -146,8 +165,8 @@ const AddTaskComponent = () => {
         />
       </div>
 
-      <div className="taskDetailContainer">
-        <label htmlFor="taskDetails"> Enter Task Details</label>
+      <div className="taskInputContainer">
+        <label htmlFor="taskDetails">Enter Task Details</label>
         <input
           name="taskDetails"
           type="text"
@@ -157,38 +176,40 @@ const AddTaskComponent = () => {
         />
       </div>
 
-      <div className="taskStatusContainer">
+      <div className="taskInputContainer">
         <label htmlFor="taskStatus">Status</label>
         <select
           name="taskStatus"
-          value={task.status || "To Do"} // Default value if not set
+          value={task.status}
           onChange={(e) =>
             setTask({ ...task, status: e.target.value as Status })
           }
         >
           <option value="To Do">To Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
+          <option value="InProgress">In Progress</option>
+          <option value="Complete">Complete</option>
+          <option value="Due Soon">Due Soon</option>
+          <option value="Overdue">Overdue</option>
         </select>
       </div>
 
-      <div className="taskDueDateContainer">
+      <div className="taskInputContainer">
         <label htmlFor="taskDueDate">Due Date</label>
         <input
           name="taskDueDate"
-          type="date" // Use date input type
-          value={task.dueDate?.toISOString().slice(0, 10) || ""} // Format date for input
+          type="date"
+          value={task.dueDate.toISOString().split("T")[0]}
           onChange={(e) =>
             setTask({ ...task, dueDate: new Date(e.target.value) })
           }
         />
       </div>
 
-      <div className="taskPriorityContainer">
+      <div className="taskInputContainer">
         <label htmlFor="taskPriority">Priority</label>
         <select
           name="taskPriority"
-          value={task.priority || "Low"} // Default value if not set
+          value={task.priority}
           onChange={(e) =>
             setTask({ ...task, priority: e.target.value as Priority })
           }

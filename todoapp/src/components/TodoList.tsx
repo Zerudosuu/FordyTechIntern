@@ -5,17 +5,8 @@ import TaskList from "./TaskList";
 import AddTaskComponent from "./AddTask";
 import styled from "styled-components";
 import EditTask from "./EditTask";
-import {
-  Calendar,
-  ChevronFirst,
-  ChevronLast,
-  CircleUser,
-  Clipboard,
-  Filter,
-  Notebook,
-  Plus,
-} from "lucide-react";
-import DateBackground from "../../public/Image/DateBackground.jpg";
+import { Plus } from "lucide-react";
+import DateBackground from "/Image/DateBackground.jpg";
 
 //BreakPoints
 const sizes = {
@@ -54,9 +45,7 @@ const Container = styled.div`
     color: #2b2b2b;
     position: absolute;
     left: 0;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    box-shadow: 10px 0px 26px rgba(0, 0, 0, 0.45);
+
     z-index: 300;
     transition: width 0.3s ease;
     background: rgb(0, 136, 240);
@@ -230,7 +219,7 @@ const Container = styled.div`
         color: white;
 
         &:hover {
-          background-color: #ececec;
+          background-color: #f5f5f5;
           color: black;
         }
       }
@@ -286,14 +275,13 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     background-color: #f5f5f5;
-    padding: 20px 20px 20px 10%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 
     @media ${media.tablet} {
       width: 100%;
-      padding: 20px 15px 20px 15%;
     }
 
     @media ${media.mobile} {
@@ -444,7 +432,6 @@ const Input = styled.div`
   justify-content: end;
   align-items: center;
   padding: 10px;
-
   gap: 10px;
 
   button {
@@ -466,26 +453,24 @@ const Input = styled.div`
     }
   }
 
-  div {
+  .FilterContainer {
     border: 1px solid #525353;
     border-radius: 10px;
     height: 100%;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 10px;
+    padding: 3px 5px;
+    background-color: white;
 
     select {
       height: 30px;
       border: none;
       background-color: none;
     }
-    background-color: white;
 
     @media ${media.mobile} {
-      div {
-        padding: 0;
-        background-color: #525353;
+      .FilterContainer {
       }
     }
   }
@@ -498,8 +483,8 @@ const TodoList = () => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState<number | null>(null);
   const [showAddTask, setShowAddTask] = useState<boolean>(false);
   const [showEditTask, setShowEditTask] = useState<boolean>(false);
-  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-  const [currentFilter, setCurrentFilter] = useState<string>("all");
+
+  const [currentFilter, setCurrentFilter] = useState<string>("All");
 
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
@@ -508,9 +493,6 @@ const TodoList = () => {
     day: "numeric",
   });
 
-  const toggleSidebar = () => {
-    setIsSideBarOpen(!isSideBarOpen);
-  };
   useEffect(() => {
     const tasks = loadTasks();
     if (tasks) {
@@ -567,7 +549,7 @@ const TodoList = () => {
       }}
     >
       <Container>
-        <aside className={`Sidebar ${isSideBarOpen ? "" : "SidebarClose"}`}>
+        {/* <aside className={`Sidebar ${isSideBarOpen ? "" : "SidebarClose"}`}>
           <div className="Profile">
             <div className="ProfileName">
               {isSideBarOpen && <h1>Ronald Salvador</h1>}
@@ -590,7 +572,7 @@ const TodoList = () => {
               <h3>Calendar</h3>
             </div>
           </div>
-        </aside>
+        </aside> */}
 
         <div className="Taskbody">
           <div className="DateNoteContainer">
@@ -599,7 +581,7 @@ const TodoList = () => {
               <h3>{formattedDate}</h3>
             </div>
 
-            <div className="RecentNotes">
+            {/* <div className="RecentNotes">
               <h1>Recent Notes</h1>
               <div className="NotesContainer">
                 <div className="Note">
@@ -615,28 +597,29 @@ const TodoList = () => {
                   <p>Notes</p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="TodoContainer">
             <div className="todoTitle">
-              <h1>To-do</h1>
+              <h1>Today's Task</h1>
               <Input>
                 <button onClick={() => setShowAddTask(true)}>
                   <Plus />
                   <span>Add Task</span>
                 </button>
 
-                <div>
-                  <label htmlFor="filter">
-                    <Filter />
-                  </label>
-                  <select id="filter " onChange={handleFilterChange}>
+                <div className="FilterContainer">
+                  <label htmlFor="filter">filter</label>
+                  <select
+                    id="filter"
+                    value={currentFilter}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="All">All</option>
                     <option value="High">High</option>
                     <option value="Medium">Medium</option>
-                    <option value="Low">low</option>
-                    <option value="All">All</option>
-                    {/* Add more options as needed */}
+                    <option value="Low">Low</option>
                   </select>
                 </div>
               </Input>
@@ -646,32 +629,6 @@ const TodoList = () => {
               <TaskList />
             </div>
           </div>
-
-          {/* <Input>
-            <button onClick={() => setShowAddTask(true)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-plus"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-
-              <span>Add Task</span>
-            </button>
-          </Input>
-
-          <TaskStyle>
-            <TaskList />
-          </TaskStyle> */}
 
           {showAddTask && <AddTaskComponent />}
           {showEditTask && currentTaskIndex !== null && (

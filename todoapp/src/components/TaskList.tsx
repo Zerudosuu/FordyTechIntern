@@ -31,6 +31,7 @@ const TaskList = () => {
         <TaskItem
           key={index}
           task={task}
+          buttonID={index}
           onDeleteTask={() => deleteTask(index)}
           getIndex={() => getCurrentTaskIndex(index)}
         />

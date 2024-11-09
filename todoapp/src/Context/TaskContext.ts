@@ -1,14 +1,16 @@
 import { createContext } from "react";
 
 export type Status =
-  | "Open"
+  | "To Do"
   | "InProgress"
-  | "Complete"
+  | "Completed"
   | "DueSoon"
-  | "Overdue"
-  | "Priority";
-export type Priority = "High" | "Medium" | "Low";
+  | "Overdue";
+
+export type Priority = "High" | "Medium" | "Low" | "All";
+
 export type Task = {
+  taskID: number;
   name: string;
   details: string;
   completed: boolean;
