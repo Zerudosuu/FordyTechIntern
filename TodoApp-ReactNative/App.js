@@ -9,15 +9,24 @@ import {
   Modal,
   Button,
 } from "react-native";
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import theme from "./src/Style/theme";
 import TaskItem from "./src/components/TaskItem";
 import { TaskContext } from "./src/Context/TaskContext";
+import AddTask from "./src/components/AddTask";
+import ViewTask from "./src/components/ViewTask";
+import TaskList from "./src/components/TaskList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  saveTasksToStorage,
+  loadTasksFromStorage,
+} from "./src/components/SaveLoad";
 
 export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [currentSelectedTask, setCurrentSelectedTask] = useState({});
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [isAddTaskModal, setIsAddTaskModal] = useState(true);
 
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
@@ -25,12 +34,52 @@ export default function App() {
     month: "long",
     day: "numeric",
   });
+
+  useEffect(() => {
+    loadTasksFromStorage(setTasks);
+  }, []);
+
+  const saveData = () => {
+    saveTasksToStorage(tasks);
+  };
+
+  const openAddTaskModal = () => {
+    setIsAddTaskModal(true);
+    setModalVisible(true);
+  };
+
+  const openViewTaskModal = () => {
+    setIsAddTaskModal(false);
+    setModalVisible(true);
+  };
+
+  const getCurrentTaskIndex = (index) => {
+    setCurrentTaskIndex(index);
+  };
+
+  const DeleteTask = () => {
+    setTasks(tasks.filter((task, index) => index !== currentTaskIndex));
+    setModalVisible(false);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const addTask = (newTask) => {
+    const updatedTask = [...tasks, newTask];
+    setTasks(updatedTask);
+    saveTasksToStorage(updatedTask);
+    setModalVisible(false);
+  };
+
   return (
     <TaskContext.Provider
       value={{
         tasks,
         setTasks,
-        setCurrentSelectedTask,
+        getCurrentTaskIndex,
+        openViewTaskModal,
       }}
     >
       <View style={styles.container}>
@@ -50,36 +99,27 @@ export default function App() {
         </View>
 
         <View style={styles.todoListContainer}>
-          <View style={styles.todoList}>
-            <TaskItem setModalVisible={setModalVisible} />
-            <TaskItem />
-            <TaskItem />
-          </View>
+          <TaskList />
         </View>
 
         <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            style={styles.AddButton}
-          >
+          <TouchableOpacity onPress={openAddTaskModal} style={styles.AddButton}>
             <Image source={require("./assets/plus.png")} style={styles.icon} />
           </TouchableOpacity>
         </View>
 
         <Modal
-          animationType="slide" // 'slide', 'fade', or 'none'
-          transparent={false} // true if you want a transparent background
+          animationType="slide"
+          transparent={true}
           visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)} // Callback for when the user taps outside the modal or the back button on Android
+          onRequestClose={() => setModalVisible(false)}
         >
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text>Hello, I am a modal!</Text>
-              <Button
-                title="Close Modal"
-                onPress={() => setModalVisible(false)}
-              />
-            </View>
+            {isAddTaskModal ? (
+              <AddTask onAddTask={addTask} onClose={closeModal} />
+            ) : (
+              <ViewTask task={tasks[currentTaskIndex]} onClose={closeModal} />
+            )}
           </View>
         </Modal>
       </View>
@@ -175,22 +215,11 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start", // Start at the top
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Dimmed background
-  },
-  modalContent: {
-    flex: 1,
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    marginTop: "39%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20, // Adds 1/3 padding from the top
   },
 });

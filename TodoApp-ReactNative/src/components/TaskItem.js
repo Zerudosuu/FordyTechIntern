@@ -3,22 +3,22 @@ import { React, useState, useContext } from "react";
 import { Checkbox } from "react-native-paper";
 import { TaskContext } from "../Context/TaskContext";
 
-const TaskItem = ({ setModalVisible }) => {
+const TaskItem = ({ openViewTaskModal, getCurrentTaskIndex }) => {
+  const [task, setTask] = useState({});
   const [isChecked, setIsChecked] = useState(false);
 
   const handleTaskClick = () => {
-    setModalVisible(true);
+    getCurrentTaskIndex(); // Call the function passed from TaskList
+    openViewTaskModal();
   };
 
   return (
     <TouchableOpacity style={styles.container} onPress={handleTaskClick}>
-      <View style={styles.checkboxContainer}>
-        <Checkbox
-          status={isChecked ? "checked" : "unchecked"}
-          onPress={() => setIsChecked(!isChecked)}
-          style={styles.roundedCheckbox}
-        />
-      </View>
+      <Checkbox
+        status={isChecked ? "checked" : "unchecked"}
+        onPress={() => setIsChecked(!isChecked)}
+        style={styles.roundedCheckbox}
+      />
 
       <View style={styles.taskContainer}>
         <Text>
@@ -75,7 +75,12 @@ const styles = StyleSheet.create({
   },
 
   roundedCheckbox: {
-    color: "rgba(255,255,255,0.6)",
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

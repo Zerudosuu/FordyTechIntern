@@ -213,6 +213,7 @@ const TaskItem = ({
   useEffect(() => {
     task.taskID = buttonID;
   }, []);
+
   const edit = () => {
     if (hideEditTask) {
       hideEditTask();
