@@ -5,7 +5,8 @@ import { TaskContext } from "../Context/TaskContext";
 const TaskList = () => {
   const taskContext = useContext(TaskContext);
 
-  const { getCurrentTaskIndex, tasks, openViewTaskModal } = taskContext;
+  const { getCurrentTaskIndex, tasks, openViewTaskModal, DeleteTask } =
+    taskContext;
 
   return (
     <View style={styles.container}>
@@ -16,6 +17,7 @@ const TaskList = () => {
             key={index}
             task={task}
             getCurrentTaskIndex={() => getCurrentTaskIndex(index)}
+            onDelete={() => DeleteTask(index)}
           />
         );
       })}

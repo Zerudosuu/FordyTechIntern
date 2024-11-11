@@ -114,6 +114,7 @@ const AddTaskContainer = styled.div`
 
 const EditTask = ({ task }: { task: Task }) => {
   const [currentTask, setCurrentTask] = useState<Task>({
+    taskID: 0,
     name: "No name Task",
     details: "",
     completed: false,

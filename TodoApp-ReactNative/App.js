@@ -16,7 +16,7 @@ import { TaskContext } from "./src/Context/TaskContext";
 import AddTask from "./src/components/AddTask";
 import ViewTask from "./src/components/ViewTask";
 import TaskList from "./src/components/TaskList";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   saveTasksToStorage,
   loadTasksFromStorage,
@@ -39,8 +39,14 @@ export default function App() {
     loadTasksFromStorage(setTasks);
   }, []);
 
-  const saveData = () => {
+  const handleSaveTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task, index) =>
+        index === currentTaskIndex ? updatedTask : task
+      )
+    );
     saveTasksToStorage(tasks);
+    setModalVisible(false);
   };
 
   const openAddTaskModal = () => {
@@ -57,8 +63,12 @@ export default function App() {
     setCurrentTaskIndex(index);
   };
 
-  const DeleteTask = () => {
-    setTasks(tasks.filter((task, index) => index !== currentTaskIndex));
+  const DeleteTask = (index) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.filter((_, i) => i !== index);
+      saveTasksToStorage(updatedTasks);
+      return updatedTasks;
+    });
     setModalVisible(false);
   };
 
@@ -80,11 +90,11 @@ export default function App() {
         setTasks,
         getCurrentTaskIndex,
         openViewTaskModal,
+        DeleteTask,
       }}
     >
       <View style={styles.container}>
         <View style={styles.currentDateAndTimeContainer}>
-          <StatusBar barStyle="default" backgroundColor="transparent" />
           <ImageBackground
             source={require("./assets/cardBackground.jpg")}
             style={styles.imageBackground}
@@ -118,7 +128,12 @@ export default function App() {
             {isAddTaskModal ? (
               <AddTask onAddTask={addTask} onClose={closeModal} />
             ) : (
-              <ViewTask task={tasks[currentTaskIndex]} onClose={closeModal} />
+              <ViewTask
+                task={tasks[currentTaskIndex]}
+                onClose={closeModal}
+                onDelete={DeleteTask}
+                onSave={handleSaveTask}
+              />
             )}
           </View>
         </Modal>
@@ -137,11 +152,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    // Ensures the rounded corners apply properly
+
     marginBottom: 20,
     flex: 1 / 3,
 
-    // Shadow properties for iOS
     shadowColor: "#445055",
     shadowOffset: {
       width: 2,
@@ -150,8 +164,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.61,
     shadowRadius: 32,
 
-    // Shadow properties for Android
-    elevation: 10, // Adjust the elevation as needed for a pronounced shadow effect
+    elevation: 10,
 
     backgroundColor: theme.colors.primary,
   },
@@ -164,62 +177,56 @@ const styles = StyleSheet.create({
   },
 
   cardHeader: {
-    fontSize: theme.fontScales.xxl,
+    fontSize: 42,
     marginBottom: 10,
     fontWeight: "bold",
-    color: "#fff", // Adjust for contrast with background
+    color: "#fff",
   },
 
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff", // Adjust for contrast with background
+    color: "#fff",
   },
 
   todoListContainer: {
     flex: 1,
-    padding: 20,
-
-    //c Adjust for contrast with background
+    padding: 10,
   },
 
   todoList: {
     flex: 1,
-    // Adjust for contrast with background
   },
   footer: {
     flex: 1 / 32,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-
-    // Adjust for contrast with background
   },
   AddButton: {
     backgroundColor: theme.colors.primary,
-    width: 90, // Adjust as needed for button size
-    height: 90, // Same as width for a perfect circle
-    borderRadius: 50, // Half of width/height for a circle
+    width: 80,
+    height: 80,
+    borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
     top: -50,
+    right: 30,
     borderWidth: 2,
-    borderColor: theme.colors.secondary, // Optional: adjust color if needed
+    borderColor: theme.colors.secondary,
   },
 
   icon: {
-    width: 40, // Adjust size as needed
+    width: 40,
     height: 40,
-    tintColor: "#fff", // Optional: adjust color if the image allows
+    tintColor: "#fff",
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: "flex-start", // Start at the top
+    justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dimmed background
-    marginTop: "39%",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20, // Adds 1/3 padding from the top
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // Semi-transparent black for dim effect
   },
 });

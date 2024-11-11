@@ -2,7 +2,7 @@
 
 const theme = {
   colors: {
-    primary: "#000f81", // Light blue (30%)
+    primary: "#0070ce", // Light blue (30%)
     secondary: "#fefedf", // 60% opacity white
     background: "#ffffff",
     textPrimary: "#333333",
