@@ -44,26 +44,27 @@ const AddTaskContainer = styled.div`
   }
 
   @media ${media.tablet} {
-    width: 90%;
-    height: 80%;
-    top: 5%;
-    left: 5%;
+    width: 100%;
+    height: auto;
+    top: 50%;
+    left: 0%;
     padding: 20px;
   }
 
   @media ${media.mobile} {
+    padding-top: 20%;
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: auto;
     left: 0;
+    bottom: 0;
     padding: 15px;
     border-radius: 0;
   }
-
   .taskInputContainer {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
+    margin-bottom: 10px;
 
     input,
     select {

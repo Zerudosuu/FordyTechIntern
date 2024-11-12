@@ -5,7 +5,7 @@ import TaskList from "./TaskList";
 import AddTaskComponent from "./AddTask";
 import styled from "styled-components";
 import EditTask from "./EditTask";
-import { Plus } from "lucide-react";
+import { Filter, Plus } from "lucide-react";
 import DateBackground from "/Image/DateBackground.jpg";
 
 //BreakPoints
@@ -610,7 +610,9 @@ const TodoList = () => {
                 </button>
 
                 <div className="FilterContainer">
-                  <label htmlFor="filter">filter</label>
+                  <label htmlFor="filter">
+                    <Filter />
+                  </label>
                   <select
                     id="filter"
                     value={currentFilter}

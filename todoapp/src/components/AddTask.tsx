@@ -53,18 +53,19 @@ const AddTaskContainer = styled.div`
   }
 
   @media ${media.tablet} {
-    width: 90%;
+    width: 100%;
     height: auto;
-    top: 0;
-    left: 5%;
+    top: 50%;
+    left: 0%;
     padding: 20px;
   }
 
   @media ${media.mobile} {
+    padding-top: 20%;
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: auto;
     left: 0;
+    bottom: 0;
     padding: 15px;
     border-radius: 0;
   }
@@ -72,7 +73,8 @@ const AddTaskContainer = styled.div`
   .taskInputContainer {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
+    margin-bottom: 10px;
 
     input,
     select {
@@ -123,7 +125,7 @@ const AddTaskContainer = styled.div`
 
 const AddTaskComponent = () => {
   const [task, setTask] = useState<Task>({
-    name: "No name Task",
+    name: "",
     details: "",
     completed: false,
     status: "To Do", // Adjusted default status to match Status type
@@ -187,7 +189,7 @@ const AddTaskComponent = () => {
         >
           <option value="To Do">To Do</option>
           <option value="InProgress">In Progress</option>
-          <option value="Complete">Complete</option>
+          <option value="Completed">Complete</option>
           <option value="Due Soon">Due Soon</option>
           <option value="Overdue">Overdue</option>
         </select>

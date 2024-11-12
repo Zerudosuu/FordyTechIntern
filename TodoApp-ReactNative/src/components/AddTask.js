@@ -111,28 +111,26 @@ export default function AddTask({ onAddTask, onClose }) {
           <Text style={styles.checkboxText}>Repeat Every Day</Text>
         </View>
 
-        {!isEveryday && (
-          <View style={styles.DateAndTimeContainer}>
-            <TouchableOpacity
-              style={styles.dateAndTime}
-              onPress={() => showMode("date")}
-            >
-              <Text style={styles.dateAndTimeTextTitle}>Select Date: </Text>
-              <Text style={styles.dateAndTimeText}>
-                {task.date.toDateString()}
-              </Text>
-              <Icon name="calendar" size={25} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.dateAndTime}
-              onPress={() => showMode("time")}
-            >
-              <Text style={styles.dateAndTimeTextTitle}>Select Time: </Text>
-              <Text style={styles.dateAndTimeText}>{task.time}</Text>
-              <Icon name="clock" size={25} color="black" />
-            </TouchableOpacity>
-          </View>
-        )}
+        <View style={styles.DateAndTimeContainer}>
+          <TouchableOpacity
+            style={styles.dateAndTime}
+            onPress={() => showMode("date")}
+          >
+            <Text style={styles.dateAndTimeTextTitle}>Select Date: </Text>
+            <Text style={styles.dateAndTimeText}>
+              {task.date.toDateString()}
+            </Text>
+            <Icon name="calendar" size={25} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.dateAndTime}
+            onPress={() => showMode("time")}
+          >
+            <Text style={styles.dateAndTimeTextTitle}>Select Time: </Text>
+            <Text style={styles.dateAndTimeText}>{task.time}</Text>
+            <Icon name="clock" size={25} color="black" />
+          </TouchableOpacity>
+        </View>
 
         {show && (
           <DateTimePicker
