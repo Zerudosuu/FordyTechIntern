@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.MONGO_DB_URI || "";
-const client = new MongoClient(uri, {
+const URI = process.env.ATLAS_URI || "";
+const client = new MongoClient(URI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -9,20 +9,16 @@ const client = new MongoClient(uri, {
   },
 });
 
-let db;
-
-async function connectToDB() {
-  if (!db) {
-    try {
-      await client.connect();
-      db = client.db("students"); // Replace 'students' with your database name
-      console.log("Connected to the database");
-    } catch (e) {
-      console.error("Failed to connect to the database", e);
-      throw e;
-    }
-  }
-  return db;
+try {
+  // Connect the client to the server
+  await client.connect();
+  // Send a ping to confirm a successful connection
+  await client.db("admin").command({ ping: 1 });
+  console.log("Pinged your deployment. You successfully connected to MongoDB!");
+} catch (err) {
+  console.error(err);
 }
 
-export default connectToDB;
+let db = client.db("studentrecords");
+
+export default db;

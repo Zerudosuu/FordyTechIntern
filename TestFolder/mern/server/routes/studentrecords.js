@@ -1,5 +1,5 @@
 import express from "express";
-import connectToDB from "../db/connection"; //! this will help us to connect with database
+import db from "../db/connection.js"; //! this will help us to connect with database
 import { ObjectId } from "mongodb"; //! this will help us to convert string to object id
 
 // this is an instance of the express router that we use to define the routes
