@@ -9,14 +9,14 @@ const router = express.Router();
 // this section will get all the list of students since its the first path ."/"
 // the router requires 3 parameters to be passed to the router function howewer the reques and the response are needed to get the data
 router.get("/", async (req, res) => {
-  let collection = await db.collection("students");
+  let collection = db.collection("students");
   let results = await collection.find({}).toArray();
   res.send(results).status(200);
 });
 
 //this section get the all the details on the specified student and retun the results
 router.get("/:id", async (req, res) => {
-  let collection = await db.collection("students");
+  let collection = db.collection("students");
   let query = { _id: ObjectId(req.params.id) };
   let results = await collection.findOne(query);
 
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
       age: req.body.age,
       address: req.body.address,
     };
-    let collection = await db.collection("students");
+    let collection = db.collection("students");
     let results = await collection.insertOne(newDocument);
     res.send(results).status(204);
   } catch (e) {
@@ -52,7 +52,7 @@ router.patch("/:id", async (req, res) => {
       },
     };
 
-    let collection = await db.collection("students");
+    let collection = db.collection("students");
     let result = await collection.updateOne(query, updates);
     res.send(result).status(200);
   } catch (error) {
@@ -66,7 +66,7 @@ router.delete("/:id", async (req, res) => {
   try {
     const query = { _id: new ObjectId(req.params.id) };
 
-    const collection = await db.collection("students");
+    const collection = db.collection("students");
     let result = await collection.deleteOne(query);
 
     res.send(result).status(200);
