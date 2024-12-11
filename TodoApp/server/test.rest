@@ -1,0 +1,31 @@
+### GET TASKS
+GET http://localhost:8080/tasks
+
+
+### GET A SPECIFIC TASK
+GET http://localhost:8080/tasks/0
+
+### CREATE A NEW TASK
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "name": "Task Sample",
+  "completed": false
+}
+
+
+### UPDATE A TASK
+PATCH http://localhost:8080/tasks/9rxBAQARpMf8oyhqgZ0B
+Content-Type: application/json
+
+{
+  "name": "Updated Task A",
+  "completed": true
+}
+
+### DELETE A TASK
+DELETE http://localhost:8080/tasks/abc123
+
+### GET TASK 
+GET http://localhost:8080/tasks/abc123
